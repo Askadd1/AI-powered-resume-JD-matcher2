@@ -1,0 +1,667 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0B0F19">
+  <meta name="description" content="TalentMatch AI — Intelligent Resume & Job Description matching engine for recruiters and job seekers.">
+  <title>TalentMatch AI — Intelligent Resume & JD Matcher</title>
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  
+  <!-- Main Stylesheet -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <!-- Ambient glowing background lights -->
+  <div class="glow-orb orb-primary"></div>
+  <div class="glow-orb orb-secondary"></div>
+  <div class="glow-orb orb-accent"></div>
+
+  <div class="app-layout">
+    <!-- Top Navigation Bar -->
+    <header class="navbar">
+      <div class="nav-brand" id="brand-home" role="button" tabindex="0" title="Return to Role Selection">
+        <div class="brand-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+          </svg>
+        </div>
+        <div class="brand-text">
+          <span class="brand-title">TalentMatch<span class="brand-badge">AI</span></span>
+          <span class="brand-sub">Neural Resume & JD Matcher</span>
+        </div>
+      </div>
+
+      <div class="nav-center" id="nav-role-indicator">
+        <div class="role-pill hidden" id="current-role-pill">
+          <span class="pulse-dot"></span>
+          <span id="role-pill-text">Select Mode</span>
+        </div>
+      </div>
+
+      <div class="nav-actions">
+        <button type="button" class="nav-btn" id="switch-role-btn" title="Switch between Recruiter and Job Seeker modes">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3 4 7l4 4"/><path d="M4 7h16"/><path d="m16 21 4-4-4-4"/><path d="M20 17H4"/></svg>
+          <span>Switch Role</span>
+        </button>
+        <button type="button" class="nav-btn ghost" id="help-btn" title="How it works">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg>
+          <span>Guide</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="main-content">
+      
+      <!-- ========================================== -->
+      <!-- SCREEN 1: ROLE SELECTION (WELCOME SCREEN)   -->
+      <!-- ========================================== -->
+      <section class="screen view-active" id="screen-welcome">
+        <div class="hero-header">
+          <div class="hero-chip">
+            <span class="chip-spark">✨</span>
+            <span>Next-Gen Semantic Resume Intelligence</span>
+          </div>
+          <h1 class="hero-title">
+            Precision Match Between<br>
+            <span class="gradient-text">Talent & Opportunity</span>
+          </h1>
+          <p class="hero-subtitle">
+            Powered by advanced LLM embeddings and deep semantic understanding. Choose your perspective to get started.
+          </p>
+        </div>
+
+        <!-- Two main interactive role cards -->
+        <div class="role-cards-container">
+          <!-- Recruiter Card -->
+          <div class="role-card recruiter-card" id="choose-recruiter-card" tabindex="0" role="button">
+            <div class="card-glow"></div>
+            <div class="card-badge">FOR HIRING TEAMS</div>
+            <div class="card-icon-wrap icon-indigo">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                <circle cx="9" cy="7" r="4"></circle>
+                <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+              </svg>
+            </div>
+            <h2 class="card-title">I'm a Recruiter</h2>
+            <p class="card-desc">
+              Paste your Job Description, drop multiple candidate resumes (PDF/DOCX), and instantly rank them by AI match score, verdict, and skill gap analysis.
+            </p>
+            <ul class="card-features">
+              <li><span>✓</span> Batch resume analysis up to 25 files</li>
+              <li><span>✓</span> Semantic fit score & percentage breakdown</li>
+              <li><span>✓</span> Matched vs missing skills radar</li>
+              <li><span>✓</span> AI verdict & candidate comparison ranking</li>
+            </ul>
+            <button type="button" class="btn-primary card-btn">
+              <span>Open Recruiter Portal</span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </button>
+          </div>
+
+          <!-- Job Seeker Card -->
+          <div class="role-card candidate-card" id="choose-candidate-card" tabindex="0" role="button">
+            <div class="card-glow"></div>
+            <div class="card-badge badge-emerald">FOR CANDIDATES</div>
+            <div class="card-icon-wrap icon-emerald">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                <circle cx="12" cy="7" r="4"></circle>
+              </svg>
+            </div>
+            <h2 class="card-title">I'm a Job Seeker</h2>
+            <p class="card-desc">
+              Select your target career track, upload your resume, and see how well your profile stands against industry expectations with actionable AI feedback.
+            </p>
+            <ul class="card-features">
+              <li><span>✓</span> Role readiness & match percentage</li>
+              <li><span>✓</span> Strengths & identified standout highlights</li>
+              <li><span>✓</span> Critical skill gaps to bridge</li>
+              <li><span>✓</span> Actionable tips to optimize your resume</li>
+            </ul>
+            <button type="button" class="btn-emerald card-btn">
+              <span>Explore My Career Fit</span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <div class="welcome-footer">
+          <div class="privacy-notice">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            <span>Strict Data Privacy: Resumes are processed in temporary memory and never stored permanently.</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- ========================================== -->
+      <!-- SCREEN 2: RECRUITER WORKSPACE              -->
+      <!-- ========================================== -->
+      <section class="screen hidden" id="screen-recruiter">
+        <div class="workspace-header">
+          <div class="header-left">
+            <button type="button" class="btn-back" id="recruiter-back-btn">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m15 18-6-6 6-6"/></svg>
+              <span>Back to Roles</span>
+            </button>
+            <h1 class="screen-title">Recruiter <span class="gradient-text">Match Studio</span></h1>
+            <p class="screen-subtitle">Input your job requirements and analyze candidate resumes in batch.</p>
+          </div>
+          <div class="header-right">
+            <span class="mode-tag tag-indigo">Recruiter Mode</span>
+          </div>
+        </div>
+
+        <form id="recruiter-form" class="studio-grid" autocomplete="off">
+          <!-- Step 1: Job Description Panel -->
+          <div class="panel glass-panel">
+            <div class="panel-header">
+              <div class="step-num">01</div>
+              <div>
+                <h3 class="panel-title">Job Description</h3>
+                <p class="panel-sub">Define the role requirements, skills, and expectations</p>
+              </div>
+            </div>
+
+            <div class="sample-chips-wrap">
+              <span class="chips-label">✨ Instant Samples:</span>
+              <div class="sample-chips" id="recruiter-samples-bar">
+                <button type="button" class="chip-btn" data-jd-key="software_engineer">💻 Full-Stack Engineer</button>
+                <button type="button" class="chip-btn" data-jd-key="ai_engineer">🤖 AI/ML Engineer</button>
+                <button type="button" class="chip-btn" data-jd-key="data_scientist">📊 Data Scientist</button>
+                <button type="button" class="chip-btn" data-jd-key="product_manager">🎯 Product Manager</button>
+                <button type="button" class="chip-btn" data-jd-key="ux_designer">🎨 UI/UX Designer</button>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <div class="textarea-header">
+                <label for="recruiter-jd-input" class="input-label">JOB SPECIFICATION DETAILS</label>
+                <span class="char-count" id="recruiter-char-count">0 characters (min 30)</span>
+              </div>
+              <textarea 
+                id="recruiter-jd-input" 
+                name="job_description" 
+                rows="10" 
+                placeholder="Paste the full job description here... (e.g. responsibilities, required technical skills, minimum experience, and qualifications)"
+                required
+              ></textarea>
+            </div>
+          </div>
+
+          <!-- Step 2: Upload Resumes Panel -->
+          <div class="panel glass-panel">
+            <div class="panel-header">
+              <div class="step-num">02</div>
+              <div>
+                <h3 class="panel-title">Candidate Resumes</h3>
+                <p class="panel-sub">Upload PDF or DOCX files to benchmark against the JD</p>
+              </div>
+            </div>
+
+            <!-- Drag and drop zone -->
+            <div class="drop-zone" id="recruiter-dropzone">
+              <input type="file" id="recruiter-file-input" name="resumes" accept=".pdf,.doc,.docx" multiple class="file-hidden-input">
+              <div class="drop-content">
+                <div class="drop-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                    <polyline points="17 8 12 3 7 8"></polyline>
+                    <line x1="12" y1="3" x2="12" y2="15"></line>
+                  </svg>
+                </div>
+                <div class="drop-text">
+                  <strong>Drag & drop candidate resumes here</strong>
+                  <span>or <button type="button" class="browse-link" id="recruiter-browse-btn">browse files</button> from your computer</span>
+                </div>
+                <div class="drop-formats">
+                  <span>Supports: PDF, DOCX, DOC (Up to 25 files, 30MB total)</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Quick bundled sample resumes trigger -->
+            <div class="sample-resumes-bar">
+              <div class="sample-resumes-left">
+                <span class="sample-badge">💡 Quick Test</span>
+                <span>Include bundled sample resumes:</span>
+              </div>
+              <button type="button" class="btn-sample-toggle" id="load-sample-resumes-btn">
+                <span>+ Add Sample Resumes</span>
+              </button>
+            </div>
+
+            <!-- File List Container -->
+            <div class="file-list-container">
+              <div class="file-list-header">
+                <span class="file-list-count" id="recruiter-file-count">0 files selected</span>
+                <button type="button" class="btn-text-danger hidden" id="recruiter-clear-files">Clear All</button>
+              </div>
+              <div class="file-list-grid" id="recruiter-file-items">
+                <!-- Dynamically injected file item badges -->
+              </div>
+            </div>
+
+            <!-- Submit Button -->
+            <div class="submit-wrap">
+              <button type="submit" class="btn-primary btn-block btn-large" id="recruiter-submit-btn">
+                <span class="btn-icon">⚡</span>
+                <span class="btn-text">Analyze & Rank Candidates</span>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+              </button>
+            </div>
+          </div>
+        </form>
+      </section>
+
+      <!-- ========================================== -->
+      <!-- SCREEN 3: JOB SEEKER WORKSPACE             -->
+      <!-- ========================================== -->
+      <section class="screen hidden" id="screen-candidate">
+        <div class="workspace-header">
+          <div class="header-left">
+            <button type="button" class="btn-back" id="candidate-back-btn">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m15 18-6-6 6-6"/></svg>
+              <span>Back to Roles</span>
+            </button>
+            <h1 class="screen-title">Job Seeker <span class="gradient-text-emerald">Career Benchmark</span></h1>
+            <p class="screen-subtitle">Discover how well your resume matches your target domain and get personalized feedback.</p>
+          </div>
+          <div class="header-right">
+            <span class="mode-tag tag-emerald">Candidate Mode</span>
+          </div>
+        </div>
+
+        <form id="candidate-form" class="studio-grid" autocomplete="off">
+          <!-- Step 1: Career Field Selection -->
+          <div class="panel glass-panel">
+            <div class="panel-header">
+              <div class="step-num step-num-emerald">01</div>
+              <div>
+                <h3 class="panel-title">Target Career Field</h3>
+                <p class="panel-sub">Select the industry discipline you want to benchmark against</p>
+              </div>
+            </div>
+
+            <div class="field-selection-grid" id="career-fields-grid">
+              <!-- Dynamically populated or rendered field cards -->
+              {% for field in fields %}
+              <div class="field-card" data-field="{{ field }}" tabindex="0" role="radio" aria-checked="false">
+                <div class="field-card-radio"></div>
+                <div class="field-card-content">
+                  <span class="field-card-title">{{ field }}</span>
+                </div>
+              </div>
+              {% endfor %}
+            </div>
+            <input type="hidden" name="field" id="selected-career-field" required>
+
+            <div class="custom-field-box">
+              <label class="custom-field-label" for="custom-field-input">Or specify a custom role title:</label>
+              <div class="custom-field-input-row">
+                <input type="text" id="custom-field-input" placeholder="e.g. Cloud Security Architect, Bioinformatician...">
+                <button type="button" class="btn-sm" id="apply-custom-field-btn">Set Field</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Step 2: Upload Resume -->
+          <div class="panel glass-panel">
+            <div class="panel-header">
+              <div class="step-num step-num-emerald">02</div>
+              <div>
+                <h3 class="panel-title">Your Resume</h3>
+                <p class="panel-sub">Upload your CV in PDF or DOCX format</p>
+              </div>
+            </div>
+
+            <div class="drop-zone drop-zone-emerald" id="candidate-dropzone">
+              <input type="file" id="candidate-file-input" name="resume" accept=".pdf,.doc,.docx" class="file-hidden-input">
+              <div class="drop-content">
+                <div class="drop-icon icon-emerald">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                    <polyline points="14 2 14 8 20 8"></polyline>
+                    <line x1="16" y1="13" x2="8" y2="13"></line>
+                    <line x1="16" y1="17" x2="8" y2="17"></line>
+                    <polyline points="10 9 9 9 8 9"></polyline>
+                  </svg>
+                </div>
+                <div class="drop-text">
+                  <strong>Drag & drop your resume here</strong>
+                  <span>or <button type="button" class="browse-link link-emerald" id="candidate-browse-btn">browse file</button> from your device</span>
+                </div>
+                <div class="drop-formats">
+                  <span>Supports: PDF, DOCX, DOC (Up to 30MB)</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Candidate Sample Resume Picker -->
+            <div class="sample-resumes-bar">
+              <div class="sample-resumes-left">
+                <span class="sample-badge badge-emerald">✨ Don't have a file ready?</span>
+                <span>Try a demo candidate profile:</span>
+              </div>
+              <div class="sample-candidate-chips" id="candidate-sample-chips">
+                <!-- Dynamically filled with sample resumes -->
+              </div>
+            </div>
+
+            <!-- Candidate Selected File Item -->
+            <div class="candidate-file-preview hidden" id="candidate-file-preview">
+              <div class="file-item-card">
+                <div class="file-item-icon">📄</div>
+                <div class="file-item-info">
+                  <strong class="file-item-name" id="candidate-file-name">filename.pdf</strong>
+                  <span class="file-item-size" id="candidate-file-size">120 KB</span>
+                </div>
+                <button type="button" class="file-remove-btn" id="candidate-remove-file" title="Remove file">✕</button>
+              </div>
+            </div>
+
+            <!-- Submit Button -->
+            <div class="submit-wrap">
+              <button type="submit" class="btn-emerald btn-block btn-large" id="candidate-submit-btn">
+                <span class="btn-icon">🎯</span>
+                <span class="btn-text">Generate My Match Report</span>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+              </button>
+            </div>
+          </div>
+        </form>
+      </section>
+
+      <!-- ========================================== -->
+      <!-- SCREEN 4: RECRUITER RESULTS DASHBOARD      -->
+      <!-- ========================================== -->
+      <section class="screen hidden" id="screen-recruiter-results">
+        <div class="results-topbar">
+          <div class="results-nav-left">
+            <button type="button" class="btn-back" id="recruiter-results-back-btn">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m15 18-6-6 6-6"/></svg>
+              <span>Modify Criteria</span>
+            </button>
+            <div>
+              <div class="results-tag">AI CANDIDATE SHORTLIST</div>
+              <h1 class="results-title" id="recruiter-results-role-title">Role Match Results</h1>
+            </div>
+          </div>
+          <div class="results-actions">
+            <button type="button" class="btn-secondary" id="export-json-btn">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              <span>Export CSV/JSON</span>
+            </button>
+            <button type="button" class="btn-secondary" id="print-recruiter-btn">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+              <span>Print Report</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Summary Metrics Row -->
+        <div class="metrics-grid">
+          <div class="metric-card glass-panel">
+            <div class="metric-icon icon-indigo">👥</div>
+            <div class="metric-content">
+              <span class="metric-label">Analyzed Candidates</span>
+              <strong class="metric-value" id="metric-total-candidates">0</strong>
+            </div>
+          </div>
+          <div class="metric-card glass-panel">
+            <div class="metric-icon icon-emerald">🏆</div>
+            <div class="metric-content">
+              <span class="metric-label">Top Match Score</span>
+              <strong class="metric-value" id="metric-top-score">0%</strong>
+            </div>
+          </div>
+          <div class="metric-card glass-panel">
+            <div class="metric-icon icon-cyan">📈</div>
+            <div class="metric-content">
+              <span class="metric-label">Average Match</span>
+              <strong class="metric-value" id="metric-avg-score">0%</strong>
+            </div>
+          </div>
+          <div class="metric-card glass-panel">
+            <div class="metric-icon icon-amber">⭐</div>
+            <div class="metric-content">
+              <span class="metric-label">Qualified Shortlist (>70%)</span>
+              <strong class="metric-value" id="metric-qualified-count">0</strong>
+            </div>
+          </div>
+        </div>
+
+        <!-- Filter & Search Toolbar -->
+        <div class="results-toolbar glass-panel">
+          <div class="filter-pills" id="recruiter-score-filters">
+            <button type="button" class="filter-pill active" data-filter="all">All Candidates (<span id="filter-count-all">0</span>)</button>
+            <button type="button" class="filter-pill" data-filter="high">🔥 High Match &ge;75% (<span id="filter-count-high">0</span>)</button>
+            <button type="button" class="filter-pill" data-filter="mid">✨ Moderate 50-74% (<span id="filter-count-mid">0</span>)</button>
+            <button type="button" class="filter-pill" data-filter="low">⚠️ Low Match &lt;50% (<span id="filter-count-low">0</span>)</button>
+          </div>
+          <div class="toolbar-search">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <input type="text" id="recruiter-candidate-search" placeholder="Search by name, skill, or keyword...">
+          </div>
+        </div>
+
+        <!-- Candidate Cards Container -->
+        <div class="candidate-cards-list" id="recruiter-results-container">
+          <!-- Dynamically populated candidate result cards -->
+        </div>
+      </section>
+
+      <!-- ========================================== -->
+      <!-- SCREEN 5: JOB SEEKER RESULTS DASHBOARD     -->
+      <!-- ========================================== -->
+      <section class="screen hidden" id="screen-candidate-results">
+        <div class="results-topbar">
+          <div class="results-nav-left">
+            <button type="button" class="btn-back" id="candidate-results-back-btn">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m15 18-6-6 6-6"/></svg>
+              <span>Back to Benchmarking</span>
+            </button>
+            <div>
+              <div class="results-tag tag-emerald">INDIVIDUAL CAREER FIT REPORT</div>
+              <h1 class="results-title" id="candidate-report-name">Candidate Report</h1>
+            </div>
+          </div>
+          <div class="results-actions">
+            <button type="button" class="btn-secondary" id="print-candidate-btn">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+              <span>Print Report</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Individual Hero Assessment Banner -->
+        <div class="candidate-hero-grid">
+          <!-- Radial Score Card -->
+          <div class="individual-score-card glass-panel">
+            <div class="radial-gauge-wrap">
+              <svg class="radial-gauge-svg" viewBox="0 0 140 140">
+                <circle class="gauge-bg" cx="70" cy="70" r="58" />
+                <circle class="gauge-bar" id="candidate-gauge-bar" cx="70" cy="70" r="58" />
+              </svg>
+              <div class="gauge-center">
+                <span class="gauge-num" id="candidate-score-num">0</span><span class="gauge-pct">%</span>
+                <span class="gauge-caption">MATCH SCORE</span>
+              </div>
+            </div>
+            <div class="score-tier-badge" id="candidate-tier-badge">Calculating...</div>
+            <div class="target-role-chip" id="candidate-target-role">Field: Software Engineering</div>
+          </div>
+
+          <!-- AI Verdict & Narrative -->
+          <div class="individual-verdict-card glass-panel">
+            <div class="verdict-card-head">
+              <div class="verdict-icon">🧠</div>
+              <div>
+                <h3 class="verdict-card-title">AI Assessment Verdict</h3>
+                <span class="verdict-card-sub" id="candidate-email-tag">Email: candidate@example.com</span>
+              </div>
+            </div>
+            <blockquote class="verdict-quote" id="candidate-verdict-quote">
+              "Analyzing candidate profile..."
+            </blockquote>
+            <div class="experience-status-row" id="candidate-exp-row">
+              <div class="exp-badge" id="candidate-exp-badge">Experience: 0 Years</div>
+              <div class="exp-fit-badge" id="candidate-exp-fit">Experience Requirement: Met</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Skills & Strengths Matrix -->
+        <div class="assessment-grid">
+          <!-- Matching Skills -->
+          <div class="panel glass-panel">
+            <div class="panel-header">
+              <div class="step-num step-num-emerald">✓</div>
+              <div>
+                <h3 class="panel-title">Matched Core Skills</h3>
+                <p class="panel-sub">Competencies strongly aligned with industry standards</p>
+              </div>
+            </div>
+            <div class="skills-tags-wrap" id="candidate-matched-skills">
+              <!-- Matched skill pills -->
+            </div>
+          </div>
+
+          <!-- Missing Skills / Growth Areas -->
+          <div class="panel glass-panel">
+            <div class="panel-header">
+              <div class="step-num step-num-amber">!</div>
+              <div>
+                <h3 class="panel-title">Skills Gap & Recommended Growth</h3>
+                <p class="panel-sub">Keywords and proficiencies that would elevate your profile</p>
+              </div>
+            </div>
+            <div class="skills-tags-wrap" id="candidate-missing-skills">
+              <!-- Missing skill pills -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Highlights & Actionable Advice -->
+        <div class="highlights-panel glass-panel">
+          <div class="panel-header">
+            <div class="step-num step-num-indigo">★</div>
+            <div>
+              <h3 class="panel-title">Resume Highlights & Strengths</h3>
+              <p class="panel-sub">Key achievements and patterns that stood out to the AI</p>
+            </div>
+          </div>
+          <ul class="highlights-list" id="candidate-highlights-list">
+            <!-- Dynamically populated highlight points -->
+          </ul>
+        </div>
+
+        <!-- Action Next Steps -->
+        <div class="candidate-actions-footer">
+          <button type="button" class="btn-secondary" id="candidate-retry-btn">
+            <span>Analyze Another Resume</span>
+          </button>
+          <button type="button" class="btn-emerald" id="candidate-switch-field-btn">
+            <span>Try Another Career Field</span>
+          </button>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- MODAL: CANDIDATE DETAIL INSPECTOR          -->
+  <!-- ========================================== -->
+  <div class="modal-overlay hidden" id="candidate-detail-modal">
+    <div class="modal-card glass-panel">
+      <button type="button" class="modal-close-btn" id="modal-close-btn" title="Close modal">✕</button>
+      <div class="modal-header">
+        <div class="modal-avatar" id="modal-avatar">C</div>
+        <div>
+          <h2 class="modal-name" id="modal-name">Candidate Name</h2>
+          <div class="modal-sub" id="modal-sub">filename.pdf · Score: 85%</div>
+        </div>
+      </div>
+      <div class="modal-body" id="modal-body-content">
+        <!-- Injected details -->
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn-secondary" id="modal-dismiss-btn">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- MODAL: GUIDE / HOW IT WORKS                -->
+  <!-- ========================================== -->
+  <div class="modal-overlay hidden" id="guide-modal">
+    <div class="modal-card glass-panel">
+      <button type="button" class="modal-close-btn" id="guide-close-btn" title="Close modal">✕</button>
+      <div class="modal-header">
+        <div class="modal-avatar icon-indigo">💡</div>
+        <div>
+          <h2 class="modal-name">How TalentMatch AI Works</h2>
+          <div class="modal-sub">Neural matching pipeline explained</div>
+        </div>
+      </div>
+      <div class="modal-body guide-body">
+        <div class="guide-step">
+          <div class="guide-step-num">1</div>
+          <div>
+            <strong>Document Ingestion & Text Extraction</strong>
+            <p>PDFs and Word documents (.docx) are parsed cleanly, extracting employment chronology, technical skills, projects, and certifications.</p>
+          </div>
+        </div>
+        <div class="guide-step">
+          <div class="guide-step-num">2</div>
+          <div>
+            <strong>Job Schema & Entity Parsing</strong>
+            <p>The job description is structured into requirements, nice-to-haves, experience baselines, and core competencies.</p>
+          </div>
+        </div>
+        <div class="guide-step">
+          <div class="guide-step-num">3</div>
+          <div>
+            <strong>Deep LLM Semantic Alignment</strong>
+            <p>Rather than simple keyword counting, the AI evaluates domain relevance, skill synergy, and career level to generate an objective match score (0-100) and actionable verdict.</p>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn-primary" id="guide-dismiss-btn">Got It!</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- GLOBAL LOADING OVERLAY                      -->
+  <!-- ========================================== -->
+  <div class="loading-overlay hidden" id="loading-overlay">
+    <div class="loading-box glass-panel">
+      <div class="spinner-ring">
+        <div></div><div></div><div></div><div></div>
+      </div>
+      <h3 class="loading-title">Analyzing Resumes with AI</h3>
+      <p class="loading-msg" id="loading-status-msg">Extracting resume text and parsing skills...</p>
+      <div class="loading-progress-bar">
+        <div class="progress-fill" id="loading-progress-fill"></div>
+      </div>
+      <div class="loading-timer" id="loading-timer-text">Processing LLM inference...</div>
+    </div>
+  </div>
+
+  <!-- GLOBAL TOAST NOTIFICATION -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <!-- Main JavaScript File -->
+  <script src="{{ url_for('static', filename='app.js') }}"></script>
+</body>
+</html>
